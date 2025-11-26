@@ -87,9 +87,9 @@
 
 <p>Forecasting stock price movements is a heavily studied subject, often focusing on numerical trends or current events. Earnings calls are a promising input to this sort of analysis because these are when the company discloses their quarterly performance. Recent 
 advances in LLMs provide novel opportunities to analyze large, unstructured linguistic data, like transcripts from earnings calls. However, a single LLM agent cannot assess all of the important dimensions of these lengthy documents.
-Factors like emotion, financial fundamentals, and logic are all features from these transcripts that are indicative of executives' expectations for company performance, but single agent's tend to underexplore these. In order to overcome a single agent's narrow reasoning abilities, a multiagent debate (MAD)
+Factors like emotion, financial fundamentals, and logic are all features from these transcripts that are indicative of executives' expectations for company performance, but single agents tend to underexplore these. In order to overcome a single agents narrow reasoning abilities, a multiagent debate (MAD)
 framework can be used to prompt agents to each explore one dimension individually, then reason amongst each other to make predictions about future stock value. After debating, they can either agree on future stock value, or a judge can assess their arguments and make a final decision.
-Ultimately, this approach was twice as accurate for predicting whether a company's stock value will increase, decrease, or remain stable over the next quarter compared to a single agent. However, the agent's were not able to provide any sort of meaningful confidence level, as these did not correlate strongly to returns.</p>
+Ultimately, this approach was able to achieve an accuracy of 52.5% for predicting whether a company's stock value will increase, decrease, or remain stable over the next quarter, while a single agent achieved 22.5%. However, the agents were not able to provide any sort of meaningful confidence level, as these did not correlate strongly to returns.</p>
 
 <hr>
 
@@ -100,7 +100,7 @@ Ultimately, this approach was twice as accurate for predicting whether a company
 <p class="sys-img"><img src="./files/pipeline.png" alt="imgname"></p>
 
 <p>Quarterly earnings call presentation and Q&A transcripts from these ten companies were provided to the agents in order for them to predict the trajectory of the stock value over the next three months. 
-Due to compute restraints, theese transcripts had to be truncated to just the last 20000 tokens, roughly half of the transcripts.</p>
+Due to compute restraints, these transcripts had to be truncated to just the last 20000 tokens, roughly half of the transcripts.</p>
 
 <hr>
 
@@ -118,9 +118,9 @@ Furthermore, this work demonstrates that multiple agents are able to reason bett
 <b>Previous Work</b>
 </p>
 <p>
-Often, these predictions are made base on basic financial numbers or from other language sources, like social media and news stories. These might contain some important signals, but they are likely different than those in earnings calls
-  because earnins calls contain insider-adjacent information (as in, it is coming from people at the company). This makes them potentially more useful because they are less skeptical than social media, for example. 
-  Also, single agent's can try to reason, but they often suffer from degeneration of thought and tend to not correct themselves. This makes their reasoning rather flawed, because they build off of bad logic. They also
+Often, these predictions are made based on basic financial numbers or from other language sources, like social media and news stories. These might contain some important signals, but they are likely different than those in earnings calls
+  because earnings calls contain insider-adjacent information (as in, it is coming from people at the company). This makes them potentially more useful because they are less skeptical than social media, for example. 
+  Also, single agents can try to reason, but they often suffer from degeneration of thought and tend to not correct themselves. This makes their reasoning rather flawed, because they build off of bad logic. They also
   focus narrowly on only a few features, lacking breadth in their reasoning.
 <p>
 
@@ -137,20 +137,25 @@ Investors, analysts, and researchers care because earnings calls influence billi
 <h2 id="approach">Approach</h2>
 
 <p>
-<b>What did you do exactly? How did you solve the problem? Why did you think it would be successful? Is anything new in your approach?</b>
+<b>Method</b>
 </p>
 
 <p>
-Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+My system works by taking the transcript of either an earnings call presentation or an earnings call Q&A session, then providing it to 3 different GPT-4o agents. One agent is the fundamentalist, who is supposed to focus on aspects like revenue and guidance.
+The next agent is the emotion analyst, who focuses on things like confidence, tone, and enthusiasm. The third agent is the logician, who focuses on consistency, clarity, and realism of strategy. These agents are given the transcript and then take turns
+  making their argument. There are two cycles of debate, and if they don't agree on the second one, then a judge personality assesses their debate and provides a final prediction. These three agents provide a mechanism
+  for the system to focus deeply on multiple different dimensions, as well as incentive for these agents to change their minds and reflect on other considerations. This helps avoid several of the issues with single agents, such 
+  as degeneration of thought, lack of self-correction, and a narrow focus. The novelty in this approach is that these three agents are prompted to focus on three major aspects of earnings calls, which other language data might not have all three of.
+For a baseline, I prompted a single agent to reason about these three dimensions, and then provide a prediction and confidence score.</p>
+
+<p>
+<b>Obstacles and Limitations</b>
 </p>
 
 <p>
-<b>What problems did you anticipate? What problems did you encounter? Did the very first thing you tried work?</b>
-</p>
-
-<p>
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-</p>
+The main problem I anticipated was computational constraints. I originally hoped to use a free model, such as LLaMA-2-7B-32K. However, this model was not good at following instructions, so I switched to GPT-4o. This cost me some money to run my experiments,
+but this model followed instructions much better. Another problem I ran into were the number of tokens I could supply to the model. The transcripts tended to be around 40000 tokens, but the OpenAI API did not allow me to provide more than 30000 input
+tokens per minute. This forced me to cut my transcripts in half, which was far from ideal, because I was losing a lot of information. Nonetheless, the MAD framework performed decently well. I still ran into issues of agents not following instructions sometimes, so I was forced to omit a few samples from my results.</p>
 
 <hr>
     
@@ -159,7 +164,14 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
 <b>How did you measure success? What experiments were used? What were the results, both quantitative and qualitative? Did you succeed? Did you fail? Why?</b>
 </p>
 <p>
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+I used several evaluation metrics, including accuracy, AUC, mean confidence, the correlation between confidence and returns, and a Sharpe Ratio, which measures whether returns are appropriate for a stock's volatility. 
+  The single agent served as a baseline for all of these metrics. I also evaluated how the different agent's confidences changed between the two rounds and how decisions made by the judge compared to those made by consensus.
+  Seeing that I had 10 companies and 4 transcripts per company, I had roughly 40 samples for each metric. However, a few samples had to be removed because the agents didn't follow instruction (the single agent in particular).
+  The MAD system outperformed the single agent in accuracy, but most of the other metrics were pretty similar between the two. Since accuracy is the only one that's based strictly on predictions and the rest consider confidence, this suggests
+  that the MAD system could make better predictions, but the confidence scores that were outputted were not very meaningful. Accuracy tended to be pretty similar for both presentation and Q&A transcripts, as well as judge versus consensus decisions.
+  However, the judge was only used twice out of 40 samples, suggesting that the judge was not very important for making predictions. The judge did obtain an AUC of 1, but this is only because that persona only had two samples.
+  The different agents all grew in confidence between the two rounds, with the emotion analyst having the highest confidence and the fundamentalist with the least. The fundamentalist also had the highest switch rate of 0.23, suggesting that they were more likely
+  to agree with other agent's assessments and agree with their prediction. The logician had the lowest change in confidence and also the lowest switch rate, so it tended to stand firm in its predictions.
 </p>
 <table>
   <thead>
@@ -184,7 +196,7 @@ Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed 
       <td style="text-align: center">error B</td>
     </tr>
   </tbody>
-  <caption>Table 1. This is Table 1's caption</caption>
+  <caption>Table 1. Comparison of Results for multiple agents and a single agent.</caption>
 </table>
 <br>
 <div style="text-align: center;">
