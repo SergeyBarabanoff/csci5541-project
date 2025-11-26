@@ -107,24 +107,29 @@ Due to compute restraints, theese transcripts had to be truncated to just the la
 <h2 id="introduction">Introduction / Background / Motivation</h2>
 
 <p>
-<b>What did you try to do? What problem did you try to solve? Articulate your objectives using absolutely no jargon.</b>
+<b>Objective</b>
 </p>
 <p>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-</p>
+I built a system that takes in a transcript from a company's earnings call presentation or Q&A session, prompted agents to explore some key dimensions (financial fundamentals, emotion, and logic), and then debate amongst themselves in order to predict what these dimensions suggest about the company's stock value over the next quarter.
+These agents would discuss for two rounds and then either agree on a prediction, or a judge personality would assess their debate and make a final prediction. This system provides insight into whether or not these features are predictive for future stock value.
+Furthermore, this work demonstrates that multiple agents are able to reason better across multiple dimensions than a single agent.</p>
 
 <p>
-<b>How is it done today, and what are the limits of current practice?</b>
+<b>Previous Work</b>
 </p>
 <p>
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Often, these predictions are made base on basic financial numbers or from other language sources, like social media and news stories. These might contain some important signals, but they are likely different than those in earnings calls
+  because earnins calls contain insider-adjacent information (as in, it is coming from people at the company). This makes them potentially more useful because they are less skeptical than social media, for example. 
+  Also, single agent's can try to reason, but they often suffer from degeneration of thought and tend to not correct themselves. This makes their reasoning rather flawed, because they build off of bad logic. They also
+  focus narrowly on only a few features, lacking breadth in their reasoning.
 <p>
 
 <p>
-<b>Who cares? If you are successful, what difference will it make?</b>
+<b>Motivation</b>
 </p>
 <p>
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Investors, analysts, and researchers care because earnings calls influence billions of dollars. This system could provide some insight into what is contained in these calls that correlates to stock value, aiding investors.
+  This also further demonstrates that multiagent systems are more capable at reasoning than single agents, which has important implications for intelligent systems.
 </p>
 
 <hr>
