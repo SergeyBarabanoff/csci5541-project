@@ -217,10 +217,13 @@ I used several evaluation metrics, including accuracy, AUC, mean confidence, the
 <h2 id="conclusion">Conclustion and Future Work</h2>
 <p>
 
-  How easily are your results able to be reproduced by others?
-  Did your dataset or annotation affect other people's choice of research or development projects to undertake?
-  Does your work have potential harm or risk to our society? What kinds? If so, how can you address them?
-  What limitations does your model have? How can you extend your work for future research?</p>
+Seeing that I had 40 samples, this is a statistically rigorous number of samples and so these results could be reproduced consistently. The most important consideration, however, is how the agents are prompted.
+  They need to be advised to focus on certain aspects of the text that are likely to be important for future stock value. I showed what a few of those features are, but certainly there are many others. It is possible
+  that these results could be much stronger with even better prompting. Also, using an API that has a higher token-per-minute limit will likely also improve results because the dataset was very truncated here. I was severely limited
+  by computational considerations, such as cost, time (it took around two and a half hours to analyze my 40 transcripts), and token-per-minute allowance. Providing entire transcripts, or presentations and Q&As simultaneously, could 
+  lead to much better results. Another important consideration, however, is that this only works until people know it works; if an executive were to find out that certain phrases were correlated to stock prices increasing, they would say it more, causing dataset drift.
+  This would probably harm the system's accuracy. Nonetheless, this work demonstrates the utility of multiagent reasoning.
+</p>
 
 
 <hr>
