@@ -1,3 +1,3 @@
-# csci5541-project-template
+# Multiagent Debate for Predicting Stock Trends from Earnings Calls
 
-This is a template webpage for CSCI 5541 NLP class.
+This repository contains my final report and Jupyter notebook.
